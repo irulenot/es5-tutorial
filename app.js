@@ -10,16 +10,20 @@ function searchWeather() {
 
   var http = new XMLHttpRequest();
   var apiKey = '426eee677455fbc5010c84a10a0007c4'
-  var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + cityName;
+  var url = 'http://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&units=metric&appid=' + apiKey;
   var method = 'GET';
   http.open(method, url);
   http.onreadystatechange = function() {
     if(http.readyState == XMLHttpRequest.DONE && http.status == 200){
-      // API tells us we will get JSON string back
       var data = JSON.parse(http.responseText);
+      var data_description = data.weather[0].description.toUpperCase();
+      var weatherData = new Weather(cityName, data_description);
+      weatherData.temperature = data.main.temp;
+
+      console.log(weatherData);
     }else if (http.readyState === XMLHttpRequest.DONE) {
       alert('Something went wrong!');
     }
   };
-
+  http.send();
 }
